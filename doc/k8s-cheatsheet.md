@@ -6,6 +6,12 @@
 minikube start
 ```
 
+## kind
+
+```bash
+kind create cluster --wait 300s
+```
+
 ## kubectl
 
 * Информация о кластере
