@@ -1,4 +1,17 @@
-# Введение в k8s
+# EX-3 Введение в k8s. Настройка локального окружения. Запуск первого контейнера. Работа с kubectl
+
+* Основное задание: исследовать почему все pod в namespace kube-system восстанвливаются после удаления
+
+* Основное задание: сборка docker образа с веб сервером работающим без привилегий root,
+  запуск pod в minikube с использованием этого образа, а так же init-контейнером
+
+## EX-3.1 Что было сделано
+
+* Написаны скрипты/ansible плэйбуки для установки minikube, kind, k9s, port-forwarder
+* Запущен minikube, установлен dashboard
+* Проверено удаление pod из kube-system namespace и как себя ведут при этом **static pods, deployment controlle, replicaset controller**
+* Собран и запушен в dockerhub образ nginx **loktionovam/web:1.17.1-alpine**, работающего на 8000 порту без root привелегий и отдающего содержимое директории **/app**
+* Написан и проверен в minikube через port-forward манифест для pod, который запускает два контейнера - **web-init** (init-контейнер), **web** (приложение)
 
 * Запустить minikube
 
@@ -78,11 +91,32 @@
   docker push loktionovam/web:1.17.1-alpine
   ```
 
+## EX-3.2 Как запустить проект
+
 * Запустить pod для докер образа web
 
   ```bash
-  kubectl apply -f kubernetes-intro/web/web-pod.yaml
+  kubectl apply -f kubernetes-intro/web-pod.yaml
+  ```
+
+## EX-3.3 Как проверить проект
+
+* pod web должен иметь состояние Running
+
+  ```bash
   kubectl get pods
   kubectl get pod web -o yaml
   kubectl describe pod web
   ```
+
+* После выполнения команды
+
+  ```bash
+  kubectl port-forward --address 0.0.0.0 pod/web 8000:8000
+  ```
+
+  в веб-браузере должна показываться страница с логотипом Express42 по адресу <http://127.0.0.1:8000/index.html>
+
+## EX-3.4 Как начать пользоваться проектом
+
+* Перейти по адресу <http://127.0.0.1:8000/index.html>
