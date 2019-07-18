@@ -4,6 +4,6 @@ metadata:
   namespace: dev
   name: admin
 rules:
-- apiGroups: [""]
+- apiGroups: ["*"]
   resources: ["*"]
   verbs: ["*"]
