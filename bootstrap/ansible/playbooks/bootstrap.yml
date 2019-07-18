@@ -21,7 +21,7 @@
     - name: Download and install minikube {{ minikube_version }}
       get_url:
         url: https://storage.googleapis.com/minikube/releases/v{{ minikube_version }}/minikube-linux-amd64
-        dest: /usr/local/bin/
+        dest: /usr/local/bin/minikube
         mode: 0755
       become: true
 
@@ -45,4 +45,17 @@
         url: https://github.com/kubernetes-sigs/kind/releases/download/v{{ kind_version }}/kind-linux-amd64
         dest: /usr/local/bin/kind
         mode: 0755
+      become: true
+    
+    - name: Install virtualbox
+      apt:
+        name: virtualbox
+        cache_valid_time: 84600
+      become: true
+
+    - name: Add user runnig the bootstrap playbook into vboxusers group
+      user:
+        name: "{{ ansible_user_id }}"
+        groups: vboxusers
+        append: true
       become: true
